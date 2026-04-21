@@ -1,24 +1,21 @@
 const express = require("express");
 const router = express.Router();
+
 const {
   matchVolunteers,
+  triggerAllMatching,
   getAllMatches,
   getMyMatches,
   updateMatchStatus,
 } = require("../controllers/matchController");
+
 const { protect } = require("../middleware/authMiddleware");
-const { authorizeRoles } = require("../middleware/roleMiddleware");
+const { authorizeRoles } = require("../middleware/roleMiddleware"); // ← correct import
 
-
-router.post("/", protect, authorizeRoles("admin"), matchVolunteers);
-
-
-router.get("/all", protect, authorizeRoles("admin"), getAllMatches);
-
-
-router.get("/mine", protect, getMyMatches);
-
-
-router.put("/:id", protect, updateMatchStatus);
+router.post("/trigger", protect, authorizeRoles("admin"), triggerAllMatching);
+router.post("/",        protect, matchVolunteers);
+router.get("/",         protect, authorizeRoles("admin"), getAllMatches);
+router.get("/my",       protect, getMyMatches);
+router.patch("/:id/status", protect, updateMatchStatus);
 
 module.exports = router;

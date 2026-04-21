@@ -29,20 +29,19 @@ app.use(cors({
 app.use(express.json());
 app.set("io", io);
 
+// ✅ All routes — fixed "match" → "matches", added "/api/admin"
 app.use("/api/auth",       require("./routes/authRoutes"));
 app.use("/api/surveys",    require("./routes/surveyRoutes"));
 app.use("/api/volunteers", require("./routes/volunteerRoutes"));
-app.use("/api/match",      require("./routes/matchRoutes"));
+app.use("/api/matches",    require("./routes/matchRoutes"));   // ← was "/api/match" ❌
 app.use("/api/needs",      require("./routes/needRoutes"));
-
+app.use("/api/admin",      require("./routes/adminRoutes"));   // ← was missing ❌
 
 app.get("/", (req, res) => {
   res.json({ message: "Vanguard NGO Hub API is running 🚀" });
 });
 
-
-socketHandler(io);   
-
+socketHandler(io);
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
