@@ -3,31 +3,30 @@ const Need = require("../models/Need");
 const User = require("../models/User");
 const { getGeminiMatch } = require("../services/geminiService");
 
-// ─── AI se match karo ─────────────────────────────────────────────
 const matchVolunteers = async (req, res) => {
   try {
     const { needId } = req.body;
 
-    // Need dhundo
+    
     const need = await Need.findById(needId);
     if (!need) {
-      return res.status(404).json({ message: "Need nahi mili" });
+      return res.status(404).json({ message: "Need not found" });
     }
 
-    // Saare available volunteers lo
+    
     const volunteers = await User.find({
       role: "volunteer",
       isAvailable: true,
     }).select("-password");
 
     if (volunteers.length === 0) {
-      return res.status(404).json({ message: "Koi volunteer available nahi hai" });
+      return res.status(404).json({ message: "No volunteers available" });
     }
 
-    // Gemini AI se best match lo
+    
     const aiResult = await getGeminiMatch(need, volunteers);
 
-    // Match save karo database mein
+    
     const savedMatches = [];
     for (const match of aiResult.matches) {
       const volunteer = volunteers.find(
@@ -42,10 +41,10 @@ const matchVolunteers = async (req, res) => {
           status: "suggested",
         });
 
-        // Real time notification bhejo Socket.io se
+        
         const io = req.app.get("io");
         io.to(volunteer._id.toString()).emit("newMatch", {
-          message: `Tumhe ek naye task ke liye suggest kiya gaya hai!`,
+          message: `You have been suggested for a new task!`,
           need: need,
           reason: match.reason,
         });
@@ -64,7 +63,7 @@ const matchVolunteers = async (req, res) => {
   }
 };
 
-// ─── Saare matches dekho (Admin) ──────────────────────────────────
+
 const getAllMatches = async (req, res) => {
   try {
     const matches = await Match.find()
@@ -77,7 +76,7 @@ const getAllMatches = async (req, res) => {
   }
 };
 
-// ─── Apne matches dekho (Volunteer) ───────────────────────────────
+
 const getMyMatches = async (req, res) => {
   try {
     const matches = await Match.find({ volunteer: req.user._id })
@@ -89,25 +88,25 @@ const getMyMatches = async (req, res) => {
   }
 };
 
-// ─── Match accept ya reject karo (Volunteer) ──────────────────────
+
 const updateMatchStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const match = await Match.findById(req.params.id);
 
     if (!match) {
-      return res.status(404).json({ message: "Match nahi mila" });
+      return res.status(404).json({ message: "Match not found" });
     }
 
-    // Sirf apna match update kar sakta hai volunteer
+    
     if (match.volunteer.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: "Ye tumhara match nahi hai" });
+      return res.status(403).json({ message: "This is not your match" });
     }
 
     match.status = status;
     await match.save();
 
-    res.json({ message: `Match ${status} ho gaya!`, match });
+    res.json({ message: `Match ${status} successfully!`, match });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

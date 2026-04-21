@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-navy-950: #032030;
+  --color-navy-900: #022B42;
+  --color-navy-800: #003554;
+  --color-navy-700: #004D74;
+  --color-navy-600: #006494;
+  --color-navy-500: #006DA4;
+  --color-navy-400: #0082cc;
+  --color-navy-300: #33a6e0;
+  --color-navy-200: #99d4f0;
+  --color-navy-100: #cce9f7;
+  --color-navy-50:  #eef7fd;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Syne', sans-serif; }
+
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #006494; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #006DA4; }
+
+.glass {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #006494, #33a6e0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.animated-bg {
+  background: linear-gradient(135deg, #032030 0%, #003554 40%, #004D74 70%, #006494 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0,100,148,0.5); }
+  70%  { transform: scale(1);    box-shadow: 0 0 0 10px rgba(0,100,148,0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0,100,148,0); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.5s ease forwards; }
+.animate-fade-in    { animation: fadeIn 0.4s ease forwards; }
+.animate-pulse-ring { animation: pulse-ring 2s infinite; }
+
+.stagger-children > * { animation-name: fadeInUp; animation-duration: 0.5s; animation-timing-function: ease; opacity: 0; animation-fill-mode: forwards; }
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.10s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.20s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.30s; }
+
+.input-glow:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0,100,148,0.25);
+  border-color: #006494;
+}
+
+.card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,100,148,0.15); }
+
+.btn-shine { position: relative; overflow: hidden; }
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -75%;
+  width: 50%; height: 200%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+.btn-shine:hover::after { left: 125%; }
+
+.navbar-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+.status-suggested  { background: #fef9c3; color: #854d0e; }
+.status-accepted   { background: #dcfce7; color: #15803d; }
+.status-rejected   { background: #fee2e2; color: #b91c1c; }
+.status-completed  { background: #dbeafe; color: #1d4ed8; }
+.dark .status-suggested  { background: rgba(133,77,14,0.2);  color: #fde68a; }
+.dark .status-accepted   { background: rgba(21,128,61,0.2);  color: #86efac; }
+.dark .status-rejected   { background: rgba(185,28,28,0.2);  color: #fca5a5; }
+.dark .status-completed  { background: rgba(29,78,216,0.2);  color: #93c5fd; }

@@ -42,14 +42,14 @@ const getGeminiMatch = async (need, volunteers) => {
     const result = await model.generateContent(prompt);
     const text = result.response.text();
 
-    // JSON parse karo
+  
     const clean = text.replace(/```json|```/g, "").trim();
     const parsed = JSON.parse(clean);
 
     return parsed;
   } catch (error) {
     console.error("Gemini Error:", error.message);
-    // Fallback agar Gemini fail ho
+    
     return {
       matches: volunteers.slice(0, 3).map((v) => ({
         volunteerName: v.name,

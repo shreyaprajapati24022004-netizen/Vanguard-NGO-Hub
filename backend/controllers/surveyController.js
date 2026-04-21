@@ -1,12 +1,11 @@
 const Survey = require("../models/Survey");
 const Need = require("../models/Need");
 
-// ─── Survey submit karo (NGO karega) ──────────────────────────────
 const createSurvey = async (req, res) => {
   try {
     const { area, category, description, urgencyLevel, peopleAffected } = req.body;
 
-    // Survey banao
+    
     const survey = await Survey.create({
       submittedBy: req.user._id,
       area,
@@ -16,12 +15,12 @@ const createSurvey = async (req, res) => {
       peopleAffected,
     });
 
-    // Need update karo ya banao us area+category ke liye
+    
     const existingNeed = await Need.findOne({ area, category });
 
     if (existingNeed) {
       existingNeed.totalReports += 1;
-      // Urgency score calculate karo
+      
       const urgencyMap = { low: 1, medium: 2, high: 3, critical: 4 };
       existingNeed.urgencyScore += urgencyMap[urgencyLevel] || 1;
       await existingNeed.save();
@@ -35,13 +34,13 @@ const createSurvey = async (req, res) => {
       });
     }
 
-    res.status(201).json({ message: "Survey submit ho gayi!", survey });
+    res.status(201).json({ message: "Survey submitted successfully!", survey });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// ─── Saari surveys dekho (Admin) ──────────────────────────────────
+
 const getAllSurveys = async (req, res) => {
   try {
     const surveys = await Survey.find()
@@ -53,7 +52,7 @@ const getAllSurveys = async (req, res) => {
   }
 };
 
-// ─── Apni surveys dekho (NGO) ─────────────────────────────────────
+
 const getMySurveys = async (req, res) => {
   try {
     const surveys = await Survey.find({ submittedBy: req.user._id })
@@ -64,7 +63,7 @@ const getMySurveys = async (req, res) => {
   }
 };
 
-// ─── Saari needs dekho (Dashboard ke liye) ────────────────────────
+
 const getAllNeeds = async (req, res) => {
   try {
     const needs = await Need.find()

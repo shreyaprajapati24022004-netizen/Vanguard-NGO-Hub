@@ -1,6 +1,5 @@
 const User = require("../models/User");
 
-// ─── Saare volunteers dekho (Admin/NGO) ───────────────────────────
 const getAllVolunteers = async (req, res) => {
   try {
     const volunteers = await User.find({ role: "volunteer" })
@@ -12,7 +11,7 @@ const getAllVolunteers = async (req, res) => {
   }
 };
 
-// ─── Apna profile update karo (Volunteer) ─────────────────────────
+
 const updateProfile = async (req, res) => {
   try {
     const { skills, location, isAvailable } = req.body;
