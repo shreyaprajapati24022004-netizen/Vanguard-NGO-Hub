@@ -65,7 +65,7 @@ const matchVolunteers = async (req, res) => {
 const triggerAllMatching = async (req, res) => {          // ← NEW FUNCTION
   try {
     // Get every need that is not yet fulfilled
-    const needs = await Need.find({ status: { $ne: "fulfilled" } });
+     const needs = await Need.find({ status: { $in: ["open", "in-progress"] } });
 
     if (needs.length === 0) {
       return res.status(404).json({ message: "No active needs found" });

@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const {
   matchVolunteers,
   triggerAllMatching,
@@ -10,12 +9,12 @@ const {
 } = require("../controllers/matchController");
 
 const { protect } = require("../middleware/authMiddleware");
-const { authorizeRoles } = require("../middleware/roleMiddleware"); // ← correct import
+const { authorizeRoles } = require("../middleware/roleMiddleware");
 
 router.post("/trigger", protect, authorizeRoles("admin"), triggerAllMatching);
-router.post("/",        protect, matchVolunteers);
-router.get("/",         protect, authorizeRoles("admin"), getAllMatches);
-router.get("/my",       protect, getMyMatches);
+router.post("/", protect, matchVolunteers);
+router.get("/", protect, authorizeRoles("admin", "ngo"), getAllMatches); // ← fixed
+router.get("/my", protect, getMyMatches);
 router.patch("/:id/status", protect, updateMatchStatus);
 
 module.exports = router;

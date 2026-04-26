@@ -15,6 +15,15 @@ const RoleRoute = ({ children, allowedRoles }) => {
   return children;
 };
 
+// ← redirects to dashboard if already logged in
+const AuthRoute = ({ children }) => {
+  const { user } = useAuth();
+  if (user?.role === "admin")     return <Navigate to="/admin" />;
+  if (user?.role === "ngo")       return <Navigate to="/ngo" />;
+  if (user?.role === "volunteer") return <Navigate to="/volunteer" />;
+  return children;
+};
+
 function App() {
   return (
     <ThemeProvider>
@@ -35,11 +44,13 @@ function App() {
             }}
           />
           <Routes>
-            <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/admin" element={<RoleRoute allowedRoles={["admin"]}><AdminDashboard /></RoleRoute>} />
-            <Route path="/ngo" element={<RoleRoute allowedRoles={["ngo","admin"]}><NGODashboard /></RoleRoute>} />
+            {/* ← root and auth pages redirect to dashboard if already logged in */}
+            <Route path="/"         element={<AuthRoute><Navigate to="/login" /></AuthRoute>} />
+            <Route path="/login"    element={<AuthRoute><Login /></AuthRoute>} />
+            <Route path="/register" element={<AuthRoute><Register /></AuthRoute>} />
+
+            <Route path="/admin"     element={<RoleRoute allowedRoles={["admin"]}><AdminDashboard /></RoleRoute>} />
+            <Route path="/ngo"       element={<RoleRoute allowedRoles={["ngo","admin"]}><NGODashboard /></RoleRoute>} />
             <Route path="/volunteer" element={<RoleRoute allowedRoles={["volunteer"]}><VolunteerDashboard /></RoleRoute>} />
           </Routes>
         </BrowserRouter>
